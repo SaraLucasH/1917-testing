@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import es.codeurjc.ais.tictactoe.Connection;
 import es.codeurjc.ais.tictactoe.Player;
@@ -32,17 +33,55 @@ public class TicTacToeDoblesTest {
 		game.addConnection(connection1);
 		connection2 = mock(Connection.class);
 		game.addConnection(connection2);
-		player1 = new Player(1, "X", "Pepe");
+		player1 = new Player(1, "X", "Sara");
 		game.addPlayer(player1);
 		verify(connection1).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1)));		
-		player2 = new Player(2, "O", "Juan");
+		player2 = new Player(2, "O", "Ioana");
 		game.addPlayer(player2);
 		
 		verify(connection1,times(2)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1,player2)));
 		verify(connection2,times(2)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1,player2)));
 	}
+	
+	
+	/*
+	 * X |   | O
+	 *   | X |
+	 *   | O | X
+	 */
 	@Test
 	public void haGanadoXTest() {
 		
+		//verificamos que los turnos iniciales son los correctos 
+		verify(connection1,times(1)).sendEvent(EventType.SET_TURN, game.getPlayers().get(0));
+		verify(connection2,times(0)).sendEvent(EventType.SET_TURN, game.getPlayers().get(1));
+		
+		//se va marcando la casilla correspondiete y se verifican los turnos 
+		game.mark(0);
+		verify(connection1, times(1)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(1)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(2);
+		verify(connection1, times(2)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(1)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(4);
+		verify(connection1, times(2)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(7);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(8);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		
+		ArgumentCaptor<WinnerValue> argument = ArgumentCaptor.forClass(WinnerValue.class);
+		
+		//comprobamos que el array con las posiciones del tablero del jugador victoriosos son las mismas
+		int[] tableroJugador1 = {0,4,8};
+		assertArrayEquals(tableroJugador1, game.checkWinner().pos);
+		
+		verify(connection1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+		verify(connection2, times(1)).sendEvent(eq(EventType.GAME_OVER), argument.capture());
 	}
+	
+	
 }
