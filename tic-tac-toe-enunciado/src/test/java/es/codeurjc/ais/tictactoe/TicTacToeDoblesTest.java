@@ -27,19 +27,22 @@ public class TicTacToeDoblesTest {
 	
 	@Before
 	public void setUp() {
-		game = new TicTacToeGame();
-		
+		game = new TicTacToeGame();		
 		connection1 = mock(Connection.class);
 		game.addConnection(connection1);
 		connection2 = mock(Connection.class);
 		game.addConnection(connection2);
-		
 		player1 = new Player(1, "X", "Pepe");
 		game.addPlayer(player1);
+		verify(connection1).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1)));		
 		player2 = new Player(2, "O", "Juan");
 		game.addPlayer(player2);
 		
-		verify(connection1).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1, player2)));
+		verify(connection1,times(2)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1,player2)));
+		verify(connection2,times(2)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(player1,player2)));
 	}
-
+	@Test
+	public void haGanadoXTest() {
+		
+	}
 }
