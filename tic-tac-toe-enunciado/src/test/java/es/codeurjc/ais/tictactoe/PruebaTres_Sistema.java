@@ -60,7 +60,7 @@ class PruebaTres_Sistema {
 		}
 	}
 	
-	@AfterClass
+	/*@AfterClass
 	public static void finishDriver() {
 		WebApp.stop();
 	}
@@ -97,7 +97,7 @@ class PruebaTres_Sistema {
 	@Test
 	void empateTest() {
 		
-	}
+	}*/
 
 	
 }

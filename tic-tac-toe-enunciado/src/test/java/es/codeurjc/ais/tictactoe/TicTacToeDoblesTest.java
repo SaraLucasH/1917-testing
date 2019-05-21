@@ -83,5 +83,96 @@ public class TicTacToeDoblesTest {
 		verify(connection2, times(1)).sendEvent(eq(EventType.GAME_OVER), argument.capture());
 	}
 	
+	/*
+	 * O |   | 
+	 * O | X | X
+	 * O |   | X
+	 */ 
+	@Test
+	public void haPerdidoXTest() {
+		//verificamos que los turnos iniciales son los correctos 
+		verify(connection1,times(1)).sendEvent(EventType.SET_TURN, game.getPlayers().get(0));
+		verify(connection2,times(0)).sendEvent(EventType.SET_TURN, game.getPlayers().get(1));
+		
+		//se va marcando la casilla correspondiete y se verifican los turnos 
+		game.mark(4);
+		verify(connection1, times(1)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(1)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(0);
+		verify(connection1, times(2)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(1)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(5);
+		verify(connection1, times(2)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(3);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(8);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(3)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(6);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(3)).sendEvent(EventType.SET_TURN, player2);
+		
+		ArgumentCaptor<WinnerValue> argument = ArgumentCaptor.forClass(WinnerValue.class);
+		
+		//comprobamos que el array con las posiciones del tablero del jugador victoriosos son las mismas
+		int[] tableroJugador2 = {0,3,6};
+		assertArrayEquals(tableroJugador2, game.checkWinner().pos);
+		
+		verify(connection1,times(1)).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+		verify(connection2).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+	}
+	
+	
+	/* X | X | O
+	 * O | X | X
+	 * X | O | O
+	 */
+	@Test
+	public void empateTest() {
+		//verificamos que los turnos iniciales son los correctos 
+		verify(connection1,times(1)).sendEvent(EventType.SET_TURN, game.getPlayers().get(0));
+		verify(connection2,times(0)).sendEvent(EventType.SET_TURN, game.getPlayers().get(1));
+		
+		//se va marcando la casilla correspondiete y se verifican los turnos 
+		game.mark(0);
+		verify(connection1, times(1)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(1)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(2);
+		verify(connection1, times(2)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(1)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(1);
+		verify(connection1, times(2)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(3);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(2)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(4);
+		verify(connection1, times(3)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(3)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(7);
+		verify(connection1, times(4)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(3)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(6);
+		verify(connection1, times(4)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(4)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(8);
+		verify(connection1, times(5)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(4)).sendEvent(EventType.SET_TURN, player2);
+		game.mark(5);
+		verify(connection1, times(5)).sendEvent(EventType.SET_TURN, player1);
+		verify(connection2, times(4)).sendEvent(EventType.SET_TURN, player2);
+		
+		//comprobamos que se ha producido el empate
+		assertTrue(game.checkDraw());
+		assertFalse(game.checkWinner().win);
+		
+		ArgumentCaptor<WinnerValue> argument = ArgumentCaptor.forClass(WinnerValue.class);
+		verify(connection1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+		verify(connection2,times(1)).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+				
+	}
+	
 	
 }
