@@ -69,7 +69,7 @@ public class PruebaTres_Sistema {
 		WebApp.stop();
 	}
 	
-	/*@Test
+	@Test
 	public void haGanadoXTest() {	
 		
 		boolean selectBotonEntrada2=botonEntrada1.isSelected();
@@ -90,9 +90,9 @@ public class PruebaTres_Sistema {
 		assertThat(driver1.switchTo().alert().getText()).isEqualTo(driver2.switchTo().alert().getText());			
 		assertThat("Sara wins!").isSubstringOf(driver1.switchTo().alert().getText());
 		assertThat("Ioana looses").isSubstringOf(driver1.switchTo().alert().getText());
-	}*/
+	}
 	
-	/*@Test
+	@Test
 	public void haPerdidoXTest() {		
 		boolean selectBotonEntrada2=botonEntrada1.isSelected();
 		boolean selectBotonEntrada1=botonEntrada2.isSelected();
@@ -113,7 +113,7 @@ public class PruebaTres_Sistema {
 		assertThat(driver1.switchTo().alert().getText()).isEqualTo(driver2.switchTo().alert().getText());		
 		assertThat("Ioana wins!").isSubstringOf(driver1.switchTo().alert().getText());
 		assertThat("Sara looses").isSubstringOf(driver1.switchTo().alert().getText());
-	}*/
+	}
 	
 	@Test
 	public void empateTest() {
